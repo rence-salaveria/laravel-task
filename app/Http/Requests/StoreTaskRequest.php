@@ -7,7 +7,7 @@ use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class CreateTaskRequest extends FormRequest
+class StoreTaskRequest extends FormRequest
 {
     public function rules(): array
     {

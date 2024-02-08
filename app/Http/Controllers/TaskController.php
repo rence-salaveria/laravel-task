@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\EditTaskRequest;
+use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Traits\HttpResponse;
@@ -23,7 +23,7 @@ class TaskController extends Controller
         return $this->success($tasks, 'Tasks retrieved successfully');
     }
 
-    public function store(CreateTaskRequest $request)
+    public function store(StoreTaskRequest $request)
     {
         $taskDetails = $request->validated();
         $taskDetails['user_id'] = auth()->id();
