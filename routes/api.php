@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TaskController as TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// catching the /get to avoid errors in ignition
+Route::get('/login', function () {
+    return response([
+        'message' => 'You need to login first!',
+    ], 401);
+})->name('login');
+
+/* ! ACTUAL ROUTES */
+
+// * PUBLIC ROUTES
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+// * PRIVATE ROUTES
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::resource('/tasks', TaskController::class);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
