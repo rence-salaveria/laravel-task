@@ -11,16 +11,6 @@ class StoreTaskRequest extends FormRequest
 {
     public function rules(): array
     {
-        /*
-         * TODO: Validation rules for task_priority and task_status
-         * currently not working as expected.
-         *
-         * OUTPUT: RETURNS 404
-         * EXPECTED: RETURNS 422
-         *
-         * Probably an error from not parsing the enum values correctly
-         * and the enum not throwing a `ValidationException`.
-         */
         return [
             'task_name' => ['required'],
             'task_description' => ['required'],
