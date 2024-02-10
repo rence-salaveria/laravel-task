@@ -14,13 +14,10 @@ class TaskController extends Controller
 
     public function index()
     {
-        // * no custom error message for this since the get "/login" handles non-authorized users
         $this->authorize('viewAny', Task::class);
-        $tasks = TaskResource::collection(
-            Task::where('user_id', auth()->id())->get()
-        );
+        $tasks = Task::where('user_id', auth()->id())->get();
 
-        return $this->success($tasks, 'Tasks retrieved successfully');
+        return $this->success(TaskResource::collection($tasks), 'Tasks retrieved successfully');
     }
 
     public function store(StoreTaskRequest $request)
@@ -35,10 +32,7 @@ class TaskController extends Controller
     public function show($id)
     {
         $task = Task::findOrFail($id);
-
-        if (! auth()->user()->can('view', $task)) {
-            return $this->error('You are unauthorized to view this task', 403);
-        }
+        $this->authorize('view', $task);
 
         return $this->success(new TaskResource($task), 'Task retrieved successfully');
     }
@@ -46,7 +40,6 @@ class TaskController extends Controller
     public function update(EditTaskRequest $request, $id)
     {
         $task = Task::findOrFail($id);
-
         $this->authorize('update', $task);
 
         $newTaskDetails = $request->validated();
@@ -55,9 +48,11 @@ class TaskController extends Controller
         return $this->success(new TaskResource($task), 'Task updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        $this->authorize('delete', Task::findOrFail($id));
-        Task::destroy($id);
+        $this->authorize('delete', $task);
+        $task->delete();
+
+        return $this->success([], 'Task deleted successfully');
     }
 }
